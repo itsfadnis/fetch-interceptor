@@ -14,7 +14,7 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel src --out-dir dist && jsdoc src README.md",
+    "build": "babel src --out-dir dist && jsdoc src README.md -d docs",
     "test": "eslint src test && jest",
     "prepublish": "yarn build"
   },
