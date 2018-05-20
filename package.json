@@ -14,8 +14,9 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel src --out-dir dist && jsdoc src README.md -d docs",
+    "build": "babel src --out-dir dist",
     "test": "eslint src test && jest",
+    "docs": "jsdoc src README.md -d docs",
     "prepublish": "yarn build"
   },
   "name": "fetch-interceptor",
