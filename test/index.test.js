@@ -65,7 +65,7 @@ describe('#unregister()', () => {
 
 describe('Intercepts', () => {
   describe('on request success', () => {
-    test('it calls the onBeforeRequest & onRequestSuccess hooks', async () => {
+    test('it calls the onBeforeRequest & onRequestSuccess hooks', () => {
       const hooks = {
         onBeforeRequest: jest.fn(),
         onRequestSuccess: jest.fn(),
@@ -77,17 +77,18 @@ describe('Intercepts', () => {
         Promise.resolve(mockResponse)
       );
       const interceptor = FetchInterceptor.register(hooks);
-      const response = await fetch('/foo');
-      expect(response).toEqual(mockResponse);
-      expect(hooks.onBeforeRequest).toHaveBeenCalledWith('/foo');
-      expect(hooks.onRequestSuccess).toHaveBeenCalledWith(mockResponse);
-      fetchSpy.mockRestore();
-      interceptor.unregister();
+      return fetch('/foo').then((response) => {
+        expect(response).toEqual(mockResponse);
+        expect(hooks.onBeforeRequest).toHaveBeenCalledWith('/foo');
+        expect(hooks.onRequestSuccess).toHaveBeenCalledWith(mockResponse);
+        fetchSpy.mockRestore();
+        interceptor.unregister();
+      });
     });
   });
 
   describe('on request failure', () => {
-    test('it calls the onBeforeRequest & onRequestSuccess hooks', async () => {
+    test('it calls the onBeforeRequest & onRequestSuccess hooks', () => {
       const hooks = {
         onBeforeRequest: jest.fn(),
         onRequestFailure: jest.fn(),
@@ -99,12 +100,13 @@ describe('Intercepts', () => {
         Promise.resolve(mockResponse)
       );
       const interceptor = FetchInterceptor.register(hooks);
-      const response = await fetch('/foo');
-      expect(response).toEqual(mockResponse);
-      expect(hooks.onBeforeRequest).toHaveBeenCalledWith('/foo');
-      expect(hooks.onRequestFailure).toHaveBeenCalledWith(mockResponse);
-      fetchSpy.mockRestore();
-      interceptor.unregister();
+      return fetch('/foo').then((response) => {
+        expect(response).toEqual(mockResponse);
+        expect(hooks.onBeforeRequest).toHaveBeenCalledWith('/foo');
+        expect(hooks.onRequestFailure).toHaveBeenCalledWith(mockResponse);
+        fetchSpy.mockRestore();
+        interceptor.unregister();
+      });
     });
   });
 });

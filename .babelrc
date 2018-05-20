@@ -1,8 +1,6 @@
 {
   "presets": ["env"],
   "plugins": [
-    "transform-class-properties",
-    "transform-regenerator",
-    "transform-async-to-generator"
+    "transform-class-properties"
   ]
 }
