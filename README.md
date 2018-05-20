@@ -11,3 +11,30 @@ or
 ```console
 $ yarn add fetch-interceptor
 ```
+
+## Usage
+```javascript
+const FetchInterceptor = require('fetch-interceptor');
+
+// Register interceptor hooks
+const interceptor = FetchInterceptor.register({
+  onBeforeRequest(request) {
+    // Hook before request
+  },
+  onRequestSuccess(response) {
+    // Hook on response success
+  },
+  onRequestFailure(response) {
+    // Hook on response failure
+  }
+});
+
+// Make fetch requests to see interceptor in action
+fetch('http://whatever.com/whatever');
+
+// Reset interceptor once you're done
+interceptor.unregister();
+```
+
+## Documentation
+https://itsfadnis.github.io/fetch-interceptor
