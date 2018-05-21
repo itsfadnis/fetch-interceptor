@@ -70,7 +70,7 @@ class FetchInterceptor {
       if (typeof this.onBeforeRequest === 'function') {
         this.onBeforeRequest(request);
       }
-      return this.fetch.apply(this.env, request).then((response) => {
+      return this.fetch.call(this.env, request).then((response) => {
         if (response.ok) {
           if (typeof this.onRequestSuccess === 'function') {
             this.onRequestSuccess(response, request);
