@@ -1,3 +1,4 @@
+require('whatwg-fetch');
 const FetchInterceptor = require('../src/index');
 
 describe('instantiation', () => {
@@ -77,10 +78,18 @@ describe('Intercepts', () => {
         Promise.resolve(mockResponse)
       );
       const interceptor = FetchInterceptor.register(hooks);
-      return fetch('/foo').then((response) => {
+      return fetch('http://foo.com/bar', {
+        method: 'POST',
+      }).then((response) => {
         expect(response).toEqual(mockResponse);
-        expect(hooks.onBeforeRequest).toHaveBeenCalledWith('/foo');
-        expect(hooks.onRequestSuccess).toHaveBeenCalledWith(mockResponse);
+        const request = hooks.onBeforeRequest.mock.calls[0][0];
+        expect(request).toBeInstanceOf(Request);
+        expect(request.url).toBe('http://foo.com/bar');
+        expect(request.method).toBe('POST');
+        expect(hooks.onRequestSuccess).toHaveBeenCalledWith(
+          mockResponse,
+          request
+        );
         fetchSpy.mockRestore();
         interceptor.unregister();
       });
@@ -100,10 +109,16 @@ describe('Intercepts', () => {
         Promise.resolve(mockResponse)
       );
       const interceptor = FetchInterceptor.register(hooks);
-      return fetch('/foo').then((response) => {
+      const request = new Request('http://foo.com/bar', {
+        method: 'POST',
+      });
+      return fetch(request).then((response) => {
         expect(response).toEqual(mockResponse);
-        expect(hooks.onBeforeRequest).toHaveBeenCalledWith('/foo');
-        expect(hooks.onRequestFailure).toHaveBeenCalledWith(mockResponse);
+        expect(hooks.onBeforeRequest).toHaveBeenCalledWith(request);
+        expect(hooks.onRequestFailure).toHaveBeenCalledWith(
+          mockResponse,
+          request
+        );
         fetchSpy.mockRestore();
         interceptor.unregister();
       });

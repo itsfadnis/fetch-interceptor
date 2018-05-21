@@ -8,7 +8,8 @@
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "jest": "^22.4.4",
-    "jsdoc": "^3.5.5"
+    "jsdoc": "^3.5.5",
+    "whatwg-fetch": "^2.0.4"
   },
   "main": "dist/index.js",
   "scripts": {
