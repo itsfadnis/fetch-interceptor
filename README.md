@@ -21,10 +21,10 @@ const interceptor = FetchInterceptor.register({
   onBeforeRequest(request) {
     // Hook before request
   },
-  onRequestSuccess(response) {
+  onRequestSuccess(response, request) {
     // Hook on response success
   },
-  onRequestFailure(response) {
+  onRequestFailure(response, request) {
     // Hook on response failure
   }
 });

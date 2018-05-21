@@ -65,18 +65,19 @@ class FetchInterceptor {
   * Hijack global fetch and insert registered hooks if present
   */
   hijack() {
-    this.env.fetch = (...request) => {
+    this.env.fetch = (...a) => {
+      const request = a[0] instanceof Request ? a[0] : new Request(...a);
       if (typeof this.onBeforeRequest === 'function') {
-        this.onBeforeRequest(...request);
+        this.onBeforeRequest(request);
       }
       return this.fetch.apply(this.env, request).then((response) => {
         if (response.ok) {
           if (typeof this.onRequestSuccess === 'function') {
-            this.onRequestSuccess(response);
+            this.onRequestSuccess(response, request);
           }
         } else {
           if (typeof this.onRequestFailure === 'function') {
-            this.onRequestFailure(response);
+            this.onRequestFailure(response, request);
           }
         }
         return response;
