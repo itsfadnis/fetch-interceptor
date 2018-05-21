@@ -22,6 +22,16 @@
   "version": "1.0.1",
   "description": "Intercept fetch requests",
   "repository": "https://github.com/itsfadnis/fetch-interceptor.git",
+  "keywords": [
+    "fetch",
+    "fetch-api",
+    "http",
+    "request",
+    "intercept",
+    "interceptor",
+    "fetch-intercept",
+    "fetch-interceptor"
+  ],
   "author": "Nikhil Fadnis",
   "license": "MIT",
   "private": false
