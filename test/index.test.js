@@ -81,11 +81,12 @@ describe('Intercepts', () => {
       return fetch('http://foo.com/bar', {
         method: 'POST',
       }).then((response) => {
-        expect(response).toEqual(mockResponse);
-        const request = hooks.onBeforeRequest.mock.calls[0][0];
+        const request = fetchSpy.mock.calls[0][0];
         expect(request).toBeInstanceOf(Request);
         expect(request.url).toBe('http://foo.com/bar');
         expect(request.method).toBe('POST');
+        expect(response).toEqual(mockResponse);
+        expect(hooks.onBeforeRequest).toHaveBeenCalledWith(request);
         expect(hooks.onRequestSuccess).toHaveBeenCalledWith(
           mockResponse,
           request
@@ -113,6 +114,7 @@ describe('Intercepts', () => {
         method: 'POST',
       });
       return fetch(request).then((response) => {
+        expect(fetchSpy).toHaveBeenCalledWith(request);
         expect(response).toEqual(mockResponse);
         expect(hooks.onBeforeRequest).toHaveBeenCalledWith(request);
         expect(hooks.onRequestFailure).toHaveBeenCalledWith(
