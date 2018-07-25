@@ -1,4 +1,5 @@
-[![Build Status](https://semaphoreci.com/api/v1/itsfadnis/fetch-interceptor/branches/master/badge.svg)](https://semaphoreci.com/itsfadnis/fetch-interceptor)
+[![Build Status](https://semaphoreci.com/api/v1/itsfadnis/fetch-interceptor/branches/master/badge.svg)](https://semaphoreci.com/itsfadnis/fetch-interceptor) 
+![Github All Releases](https://img.shields.io/github/downloads/atom/atom/total.svg?style=social)
 
 # fetch-interceptor
 Intercept fetch requests
