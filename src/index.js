@@ -43,6 +43,9 @@ class FetchInterceptor {
   * @return {FetchInterceptor} An interceptor object
   */
   static register(hooks = {}) {
+    if (this._instance) {
+      return this._instance;
+    }
     const interceptor = new this();
     for (let i = 0; i < this.hooks.length; i++) {
       const hook = this.hooks[i];
@@ -51,6 +54,7 @@ class FetchInterceptor {
       }
     }
     interceptor.hijack();
+    this._instance = interceptor;
     return interceptor;
   }
 
@@ -59,6 +63,7 @@ class FetchInterceptor {
   */
   unregister() {
     this.env.fetch = this.fetch;
+    delete this.constructor._instance;
   }
 
   /**
