@@ -1,6 +1,12 @@
 require('whatwg-fetch');
 const FetchInterceptor = require('../src/index');
 
+beforeEach(() => {
+  if (FetchInterceptor._instance) {
+    FetchInterceptor._instance.unregister();
+  }
+});
+
 describe('instantiation', () => {
   test('it sets up fetch based on environment', () => {
     const interceptor = new FetchInterceptor();
@@ -53,14 +59,22 @@ describe('.register(hooks)', () => {
     expect(hijackSpy).toHaveBeenCalled();
     hijackSpy.mockRestore();
   });
+
+  test('it ensures a singleton class', () => {
+    const firstInstance = FetchInterceptor.register();
+    const secondInstance = FetchInterceptor.register();
+    expect(firstInstance).toEqual(secondInstance);
+  });
 });
 
 describe('#unregister()', () => {
   test('it resets global fetch', () => {
     const interceptor = FetchInterceptor.register();
     expect(interceptor.env.fetch).not.toEqual(interceptor.fetch);
+    expect(FetchInterceptor._instance).toEqual(interceptor);
     interceptor.unregister();
     expect(interceptor.env.fetch).toEqual(interceptor.fetch);
+    expect(FetchInterceptor._instance).toBeUndefined();
   });
 });
 
