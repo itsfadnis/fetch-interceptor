@@ -20,7 +20,7 @@
     "prepublish": "yarn build"
   },
   "name": "fetch-interceptor",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Intercept fetch requests",
   "repository": "https://github.com/itsfadnis/fetch-interceptor.git",
   "keywords": [
