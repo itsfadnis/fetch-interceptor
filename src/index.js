@@ -70,19 +70,61 @@ class FetchInterceptor {
   * Hijack global fetch and insert registered hooks if present
   */
   hijack() {
+    const controller = new AbortController();
+    const signal = controller.signal;
     this.env.fetch = (...a) => {
-      const request = a[0] instanceof Request ? a[0] : new Request(...a);
-      if (typeof this.onBeforeRequest === 'function') {
-        this.onBeforeRequest(request);
+      let request;
+      if (a[0] instanceof Request) {
+        let object = {};
+        [
+          'cache',
+          'context',
+          'credentials',
+          'destination',
+          'headers',
+          'integrity',
+          'method',
+          'mode',
+          'redirect',
+          'referrer',
+          'referrerPolicy',
+          'url',
+          'body',
+          'bodyUsed',
+        ].forEach((prop) => {
+          if (prop in a[0]) {
+            object[prop] = a[0][prop];
+          }
+        });
+        object.signal = signal;
+        const {
+          url,
+          ...options
+        } = object;
+        request = new Request(url, options);
+      } else {
+        const url = a[0];
+        const options = {
+          ...a[1],
+          signal,
+        };
+        request = new Request(url, options);
       }
-      return this.fetch.call(this.env, request).then((response) => {
+      if (typeof this.onBeforeRequest === 'function') {
+        this.onBeforeRequest(request, controller);
+      }
+      const promise = this.fetch.call(this.env, request);
+      if (typeof this.onAfterRequest === 'function') {
+        this.onAfterRequest(request, controller);
+      }
+      return promise.then((response) => {
         if (response.ok) {
           if (typeof this.onRequestSuccess === 'function') {
-            this.onRequestSuccess(response, request);
+            this.onRequestSuccess(response, request, controller);
           }
         } else {
           if (typeof this.onRequestFailure === 'function') {
-            this.onRequestFailure(response, request);
+            this.onRequestFailure(response, request, controller);
           }
         }
         return response;
