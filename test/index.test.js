@@ -100,11 +100,19 @@ describe('Intercepts', () => {
         expect(request.url).toBe('http://foo.com/bar');
         expect(request.method).toBe('POST');
         expect(response).toEqual(mockResponse);
-        expect(hooks.onBeforeRequest).toHaveBeenCalledWith(request);
-        expect(hooks.onRequestSuccess).toHaveBeenCalledWith(
-          mockResponse,
-          request
-        );
+
+        expect(hooks.onBeforeRequest.mock.calls[0][0])
+          .toEqual(request);
+        expect(hooks.onBeforeRequest.mock.calls[0][1])
+          .toBeInstanceOf(AbortController);
+
+        expect(hooks.onRequestSuccess.mock.calls[0][0])
+          .toEqual(mockResponse);
+        expect(hooks.onRequestSuccess.mock.calls[0][1])
+          .toEqual(request);
+        expect(hooks.onRequestSuccess.mock.calls[0][2])
+          .toBeInstanceOf(AbortController);
+
         fetchSpy.mockRestore();
         interceptor.unregister();
       });
@@ -130,11 +138,19 @@ describe('Intercepts', () => {
       return fetch(request).then((response) => {
         expect(fetchSpy).toHaveBeenCalledWith(request);
         expect(response).toEqual(mockResponse);
-        expect(hooks.onBeforeRequest).toHaveBeenCalledWith(request);
-        expect(hooks.onRequestFailure).toHaveBeenCalledWith(
-          mockResponse,
-          request
-        );
+
+        expect(hooks.onBeforeRequest.mock.calls[0][0])
+          .toEqual(request);
+        expect(hooks.onBeforeRequest.mock.calls[0][1])
+          .toBeInstanceOf(AbortController);
+
+        expect(hooks.onRequestFailure.mock.calls[0][0])
+          .toEqual(mockResponse);
+        expect(hooks.onRequestFailure.mock.calls[0][1])
+          .toEqual(request);
+        expect(hooks.onRequestFailure.mock.calls[0][2])
+          .toBeInstanceOf(AbortController);
+
         fetchSpy.mockRestore();
         interceptor.unregister();
       });
