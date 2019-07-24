@@ -120,13 +120,15 @@ class FetchInterceptor {
       return promise.then((response) => {
         if (response.ok) {
           if (typeof this.onRequestSuccess === 'function') {
-            return this.onRequestSuccess(response, request, controller)
-              .then(() => response);
+            return Promise.resolve(
+              this.onRequestSuccess(response, request, controller)
+            ).then(() => response);
           }
         } else {
           if (typeof this.onRequestFailure === 'function') {
-            return this.onRequestFailure(response, request, controller)
-              .then(() => response);
+            return Promise.resolve(
+              this.onRequestFailure(response, request, controller)
+            ).then(() => response);
           }
         }
         return response;
