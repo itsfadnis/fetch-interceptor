@@ -70,9 +70,9 @@ class FetchInterceptor {
   * Hijack global fetch and insert registered hooks if present
   */
   hijack() {
-    const controller = new AbortController();
-    const signal = controller.signal;
     this.env.fetch = (...a) => {
+      const controller = new AbortController();
+      const signal = controller.signal;
       let request;
       if (a[0] instanceof Request) {
         let object = {};
@@ -120,11 +120,13 @@ class FetchInterceptor {
       return promise.then((response) => {
         if (response.ok) {
           if (typeof this.onRequestSuccess === 'function') {
-            this.onRequestSuccess(response, request, controller);
+            return this.onRequestSuccess(response, request, controller)
+              .then(() => response);
           }
         } else {
           if (typeof this.onRequestFailure === 'function') {
-            this.onRequestFailure(response, request, controller);
+            return this.onRequestFailure(response, request, controller)
+              .then(() => response);
           }
         }
         return response;
