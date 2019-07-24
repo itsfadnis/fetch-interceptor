@@ -5,7 +5,7 @@ class FetchInterceptor {
   /**
   * Recognize global environment and attach fetch
   */
-  constructor() {
+  constructor () {
     const ENVIRONMENT_IS_REACT_NATIVE
       = typeof navigator === 'object' && navigator.product === 'ReactNative';
     const ENVIRONMENT_IS_NODE
@@ -42,7 +42,7 @@ class FetchInterceptor {
   * @param {object} hooks - The intercept hooks
   * @return {FetchInterceptor} An interceptor object
   */
-  static register(hooks = {}) {
+  static register (hooks = {}) {
     if (this._instance) {
       return this._instance;
     }
@@ -61,7 +61,7 @@ class FetchInterceptor {
   /**
   * Reset fetch and unregister intercept hooks
   */
-  unregister() {
+  unregister () {
     this.env.fetch = this.fetch;
     delete this.constructor._instance;
   }
@@ -69,7 +69,7 @@ class FetchInterceptor {
   /**
   * Hijack global fetch and insert registered hooks if present
   */
-  hijack() {
+  hijack () {
     this.env.fetch = (...a) => {
       const controller = new AbortController();
       const signal = controller.signal;
@@ -120,11 +120,13 @@ class FetchInterceptor {
       return promise.then((response) => {
         if (response.ok) {
           if (typeof this.onRequestSuccess === 'function') {
-            return this.onRequestSuccess(response, request, controller).then(() => response);
+            return this.onRequestSuccess(response, request, controller)
+              .then(() => response);
           }
         } else {
           if (typeof this.onRequestFailure === 'function') {
-            return this.onRequestFailure(response, request, controller).then(() => response);
+            return this.onRequestFailure(response, request, controller)
+              .then(() => response);
           }
         }
         return response;
