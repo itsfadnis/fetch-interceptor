@@ -128,6 +128,11 @@ class FetchInterceptor {
           }
         }
         return response;
+      }).catch((error) => {
+        if (typeof this.onRequestFailure === 'function') {
+          this.onRequestFailure(error, request, controller);
+        }
+        throw error;
       });
     };
   }
